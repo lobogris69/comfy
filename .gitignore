@@ -1,0 +1,23 @@
+# Salidas de generación
+outputs/
+*.mp4
+*.webm
+*.gif
+*.png
+*.webp
+
+# Modelos y pesos (no subir al repo)
+models/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema
+.DS_Store
