@@ -68,16 +68,47 @@ Una vez conectado, en una sesión de Claude Code puedes pedir cosas como:
 - "Busca una plantilla de AnimateDiff" → `search_templates`
 - "Ejecuta este workflow de vídeo y descárgame el resultado" → `run_workflow` → `fetch_outputs`
 
-## 6. Estructura del repo
+## 6. Workflow de ejemplo incluido
+
+En `workflows/animatediff_txt2video.json` tienes un pipeline **texto → vídeo**
+con AnimateDiff listo para probar (formato API, el que consume `comfy-mcp`).
+
+**Necesitas en tu ComfyUI:**
+
+| Qué | Dónde va | Nota |
+|-----|----------|------|
+| Custom node **ComfyUI-AnimateDiff-Evolved** | vía ComfyUI Manager | aporta el nodo `ADE_AnimateDiffLoaderGen1` |
+| Custom node **ComfyUI-VideoHelperSuite** | vía ComfyUI Manager | aporta `VHS_VideoCombine` (salida .mp4) |
+| Checkpoint SD1.5 (ej. `dreamshaper_8.safetensors`) | `ComfyUI/models/checkpoints/` | cámbialo en el nodo `1` si usas otro |
+| Motion module `mm_sd_v15_v2.ckpt` | `ComfyUI/models/animatediff_models/` | modelo de movimiento de AnimateDiff |
+
+**Ejecutarlo desde Claude Code** (con `comfy-mcp` conectado):
+
+> "Ejecuta el workflow `workflows/animatediff_txt2video.json` y descárgame el vídeo"
+
+O directamente con comfy-cli:
+
+```bash
+comfy run --workflow workflows/animatediff_txt2video.json --wait
+```
+
+**Qué puedes ajustar** en el JSON: el *prompt* positivo/negativo (nodos `2` y `3`),
+`batch_size` = nº de fotogramas (nodo `4`), `seed`/`steps`/`cfg` (nodo `6`) y
+`frame_rate` del vídeo (nodo `8`).
+
+> Si algún modelo tiene otro nombre en tu equipo, edita el campo correspondiente
+> del JSON o pídemelo y te lo dejo ajustado.
+
+## 7. Estructura del repo
 
 ```
 .
 ├── README.md
-├── .claude/
-│   └── settings.json      # registra comfy-mcp para este proyecto
+├── .mcp.json                       # registra comfy-mcp para este proyecto
 ├── .gitignore
-└── workflows/             # aquí guardas tus workflows .json de ComfyUI
-    └── .gitkeep
+└── workflows/                      # workflows .json de ComfyUI
+    └── animatediff_txt2video.json  # ejemplo: texto -> vídeo con AnimateDiff
 ```
 
-> **Nota:** edita `COMFY_URL` en `.claude/settings.json` con la URL real de tu ComfyUI.
+> **Nota:** edita `COMFY_URL` en `.mcp.json` con la URL real de tu ComfyUI
+> (por defecto `http://127.0.0.1:8188`, para ComfyUI en tu PC local).
